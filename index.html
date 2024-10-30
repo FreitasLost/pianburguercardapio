@@ -1,0 +1,425 @@
+<html><head><base href="/" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cardápio PIAN Burguer</title>
+<style>
+:root {
+    --primary: #ff6b01;
+    --secondary: #1a1a1a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--secondary);
+    color: white;
+    padding-bottom: 120px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: url('https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=16y14rvk&dl=1') center/300px repeat;
+    opacity: 0.3;
+}
+
+.header {
+    background-color: var(--primary);
+    padding: 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+}
+
+.container {
+    padding: 10px;
+}
+
+.user-info {
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: rgba(255, 107, 1, 0.1);
+    border-radius: 8px;
+}
+
+.user-info input {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.user-info textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    min-height: 80px;
+    resize: vertical;
+    background: white;
+}
+
+.delivery-type {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.delivery-type label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.delivery-type input[type="radio"] {
+    cursor: pointer;
+}
+
+#addressField {
+    display: none;
+    transition: all 0.3s ease;
+}
+
+#addressField.show {
+    display: block;
+}
+
+.menu-section {
+    margin: 15px 0;
+}
+
+.menu-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.menu-item {
+    background-color: rgba(255, 107, 1, 0.1);
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.menu-item h3 {
+    color: var(--primary);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.menu-item .price {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 8px 0;
+}
+
+.add-to-cart {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+.cart {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--primary);
+    padding: 15px;
+    border-radius: 8px 8px 0 0;
+    max-height: 60vh;
+    overflow-y: auto;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+}
+
+.cart h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    background: rgba(255,255,255,0.1);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.cart-item button {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#cart-total {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.checkout-btn {
+    background-color: white;
+    color: var(--primary);
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .cart {
+        padding: 10px;
+    }
+    
+    .menu-item {
+        margin-bottom: 8px;
+    }
+    
+    .cart-item {
+        font-size: 0.9rem;
+    }
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>Cardápio Pian Burguer</h1>
+</div>
+
+<div class="container">
+    <div class="user-info">
+        <h2>Seus Dados</h2>
+        <input type="text" id="userName" placeholder="Seu Nome">
+        <input type="tel" id="userPhone" placeholder="Seu Telefone">
+        <div class="delivery-type">
+            <label>
+                <input type="radio" name="deliveryType" value="pickup" checked> Retirada
+            </label>
+            <label>
+                <input type="radio" name="deliveryType" value="delivery"> Entrega
+            </label>
+        </div>
+        <div id="addressField">
+            <textarea id="userAddress" placeholder="Seu endereço completo"></textarea>
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2>Lanches</h2>
+        <div class="menu-grid" id="sandwiches"></div>
+    </div>
+
+    <div class="menu-section">
+        <h2>Bebidas</h2>
+        <div class="menu-grid" id="drinks"></div>
+    </div>
+</div>
+
+<div class="cart" id="cart">
+    <h2>Carrinho</h2>
+    <div id="cart-items"></div>
+    <div id="cart-total">Total: R$ 0.00</div>
+    <button class="checkout-btn" onclick="checkout()">Finalizar Pedido</button>
+</div>
+
+<script>
+const menuItems = {
+    sandwiches: [
+        { name: "X-Burger", price: 18.90, description: "Hambúrguer, queijo, alface, tomate" },
+        { name: "X-Bacon", price: 22.90, description: "Hambúrguer, bacon, queijo, alface, tomate" },
+        { name: "X-Egg", price: 20.90, description: "Hambúrguer, ovo, queijo, alface, tomate" },
+        { name: "X-Tudo", price: 28.90, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
+        { name: "Vegetariano", price: 19.90, description: "Hambúrguer vegetal, queijo, alface, tomate" },
+        { name: "Frango Supreme", price: 23.90, description: "Frango grelhado, queijo, alface, tomate" },
+        { name: "X-Calabresa", price: 24.90, description: "Hambúrguer, calabresa, queijo, alface" },
+        { name: "X-Salada", price: 17.90, description: "Hambúrguer, queijo, alface, tomate, cebola" },
+        { name: "X-Picanha", price: 32.90, description: "Hambúrguer de picanha, queijo, alface" },
+        { name: "X-Costela", price: 29.90, description: "Hambúrguer de costela, queijo, cebola" },
+        { name: "X-Fish", price: 26.90, description: "Filé de peixe, queijo, alface, tomate" },
+        { name: "X-Duplo", price: 34.90, description: "Dois hambúrgueres, queijo duplo, alface" }
+    ],
+    drinks: [
+        { name: "Coca-Cola", price: 6.90, description: "350ml" },
+        { name: "Guaraná", price: 6.90, description: "350ml" },
+        { name: "Sprite", price: 6.90, description: "350ml" },
+        { name: "Fanta", price: 6.90, description: "350ml" },
+        { name: "Suco de Laranja", price: 8.90, description: "500ml" },
+        { name: "Suco de Limão", price: 8.90, description: "500ml" },
+        { name: "Suco de Maracujá", price: 8.90, description: "500ml" },
+        { name: "Água Mineral", price: 4.90, description: "500ml" },
+        { name: "Água com Gás", price: 5.90, description: "500ml" },
+        { name: "Cerveja", price: 8.90, description: "350ml" },
+        { name: "Milkshake", price: 12.90, description: "400ml" },
+        { name: "Refrigerante Zero", price: 6.90, description: "350ml" }
+    ]
+};
+
+let cart = [];
+let deliveryFee = 0;
+
+function displayMenuItems() {
+    const sandwichesContainer = document.getElementById('sandwiches');
+    const drinksContainer = document.getElementById('drinks');
+
+    menuItems.sandwiches.forEach(item => {
+        sandwichesContainer.innerHTML += createMenuItem(item);
+    });
+
+    menuItems.drinks.forEach(item => {
+        drinksContainer.innerHTML += createMenuItem(item);
+    });
+}
+
+function createMenuItem(item) {
+    return `
+        <div class="menu-item">
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <div class="price">R$ ${item.price.toFixed(2)}</div>
+            <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price})">
+                Adicionar ao Carrinho
+            </button>
+        </div>
+    `;
+}
+
+function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCart();
+}
+
+function updateCart() {
+    const cartItems = document.getElementById('cart-items');
+    const cartTotal = document.getElementById('cart-total');
+    let total = 0;
+
+    cartItems.innerHTML = '';
+    cart.forEach((item, index) => {
+        total += item.price;
+        cartItems.innerHTML += `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <span>R$ ${item.price.toFixed(2)}</span>
+                <button onclick="removeFromCart(${index})">X</button>
+            </div>
+        `;
+    });
+
+    const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+    if (deliveryType === 'delivery') {
+        deliveryFee = 5;
+        cartItems.innerHTML += `
+            <div class="cart-item">
+                <span>Taxa de Entrega</span>
+                <span>R$ ${deliveryFee.toFixed(2)}</span>
+            </div>
+        `;
+        total += deliveryFee;
+    }
+
+    cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
+}
+
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
+
+document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const addressField = document.getElementById('addressField');
+        if (this.value === 'delivery') {
+            addressField.classList.add('show');
+        } else {
+            addressField.classList.remove('show');
+        }
+        updateCart();
+    });
+});
+
+function checkout() {
+    const name = document.getElementById('userName').value;
+    const phone = document.getElementById('userPhone').value;
+    const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
+    const address = document.getElementById('userAddress').value;
+
+    if (!name || !phone) {
+        alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
+        return;
+    }
+
+    if (deliveryType === 'delivery' && !address) {
+        alert('Por favor, preencha seu endereço para entrega.');
+        return;
+    }
+
+    let message = `Olá! Novo pedido:\n\nCliente: ${name}\nTelefone: ${phone}\n`;
+    message += `Tipo: ${deliveryType === 'delivery' ? 'Entrega' : 'Retirada'}\n`;
+    if (deliveryType === 'delivery') {
+        message += `Endereço: ${address}\n`;
+    }
+    message += `\nPedido:\n`;
+    
+    let total = 0;
+
+    cart.forEach(item => {
+        message += `${item.name} - R$ ${item.price.toFixed(2)}\n`;
+        total += item.price;
+    });
+
+    if (deliveryType === 'delivery') {
+        message += `Taxa de Entrega - R$ ${deliveryFee.toFixed(2)}\n`;
+        total += deliveryFee;
+    }
+
+    message += `\nTotal: R$ ${total.toFixed(2)}`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/5517992095122?text=${encodedMessage}`);
+}
+
+displayMenuItems();
+</script>
+</body>
+</html>
