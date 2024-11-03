@@ -1,7 +1,7 @@
 <html><head><base href="/" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cardápio PIAN Burguer</title>
+<title>Pian Burguer</title>
 <style>
 :root {
     --primary: #ff6b01;
@@ -31,7 +31,7 @@ body::before {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: url('https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=16y14rvk&dl=1') center/300px repeat;
+    background: url('https://www.dropbox.com/scl/fi/o07qj7ohfirjcgyj67jgr/6.png?rlkey=fk7e201rqwdzd5f942ccazpwg&st=5rrkqo7u&dl=1') center/300px repeat;
     opacity: 0.3;
 }
 
@@ -68,15 +68,13 @@ body::before {
     font-size: 16px;
 }
 
-.user-info textarea {
+#addressField input {
     width: 100%;
     padding: 12px;
     margin: 5px 0;
     border: none;
     border-radius: 4px;
     font-size: 16px;
-    min-height: 80px;
-    resize: vertical;
     background: white;
 }
 
@@ -138,6 +136,40 @@ body::before {
     font-weight: bold;
     font-size: 1.1em;
     margin: 8px 0;
+}
+
+.add-ons {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.addon-option {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9em;
+    color: #fff;
+    cursor: pointer;
+}
+
+.addon-option input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.cart-item-addons {
+    font-size: 0.8em;
+    color: rgba(255,255,255,0.8);
+    margin-top: 2px;
+}
+
+.cart-item {
+    flex-wrap: wrap;
+}
+
+.cart-item > div:first-child {
+    flex: 1;
 }
 
 .add-to-cart {
@@ -224,7 +256,7 @@ body::before {
 </head>
 <body>
 <div class="header">
-    <h1>Cardápio Pian Burguer</h1>
+    <h1>Pian Burguer</h1>
 </div>
 
 <div class="container">
@@ -241,7 +273,9 @@ body::before {
             </label>
         </div>
         <div id="addressField">
-            <textarea id="userAddress" placeholder="Seu endereço completo"></textarea>
+            <input type="text" id="userStreet" placeholder="Nome da Rua">
+            <input type="text" id="userNeighborhood" placeholder="Bairro">
+            <input type="text" id="userNumber" placeholder="Número da Casa">
         </div>
     </div>
 
@@ -264,34 +298,29 @@ body::before {
 </div>
 
 <script>
+const addOns = [
+    { name: "Bacon Extra", price: 6.00 },
+    { name: "Queijo Extra", price: 4.00 },
+    { name: "Ovo", price: 3.00 },
+    { name: "Azeitona", price: 1.50 },
+    { name: "Cheddar", price: 5.00 },
+    { name: "Catupiry", price: 5.00 }
+];
+
 const menuItems = {
     sandwiches: [
-        { name: "X-Burger", price: 18.90, description: "Hambúrguer, queijo, alface, tomate" },
-        { name: "X-Bacon", price: 22.90, description: "Hambúrguer, bacon, queijo, alface, tomate" },
-        { name: "X-Egg", price: 20.90, description: "Hambúrguer, ovo, queijo, alface, tomate" },
-        { name: "X-Tudo", price: 28.90, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
-        { name: "Vegetariano", price: 19.90, description: "Hambúrguer vegetal, queijo, alface, tomate" },
-        { name: "Frango Supreme", price: 23.90, description: "Frango grelhado, queijo, alface, tomate" },
-        { name: "X-Calabresa", price: 24.90, description: "Hambúrguer, calabresa, queijo, alface" },
-        { name: "X-Salada", price: 17.90, description: "Hambúrguer, queijo, alface, tomate, cebola" },
-        { name: "X-Picanha", price: 32.90, description: "Hambúrguer de picanha, queijo, alface" },
-        { name: "X-Costela", price: 29.90, description: "Hambúrguer de costela, queijo, cebola" },
-        { name: "X-Fish", price: 26.90, description: "Filé de peixe, queijo, alface, tomate" },
-        { name: "X-Duplo", price: 34.90, description: "Dois hambúrgueres, queijo duplo, alface" }
+        { name: "X-Burguer", price: 15.00, description: "Hambúrguer, queijo, alface e tomate" },
+        { name: "X-Bacon", price: 18.00, description: "Hambúrguer, bacon, queijo, alface, tomate" },
+        { name: "X-Egg", price: 16.00, description: "Hambúrguer, ovo, queijo, alface, tomate" },
+        { name: "X-Tudo", price: 23.00, description: "Hambúrguer, bacon, ovo, queijo, alface, tomate" },
+        { name: "X-Calabresa", price: 22.00, description: "Hambúrguer, calabresa, queijo, alface" },
+        { name: "X-Salada", price: 16.00, description: "Hambúrguer, queijo, alface, tomate, cebola" },
+        { name: "Maionese Verde", price: 2.50, description: "Porção de maionese verde", noAddons: true }
     ],
     drinks: [
-        { name: "Coca-Cola", price: 6.90, description: "350ml" },
-        { name: "Guaraná", price: 6.90, description: "350ml" },
-        { name: "Sprite", price: 6.90, description: "350ml" },
-        { name: "Fanta", price: 6.90, description: "350ml" },
-        { name: "Suco de Laranja", price: 8.90, description: "500ml" },
-        { name: "Suco de Limão", price: 8.90, description: "500ml" },
-        { name: "Suco de Maracujá", price: 8.90, description: "500ml" },
-        { name: "Água Mineral", price: 4.90, description: "500ml" },
-        { name: "Água com Gás", price: 5.90, description: "500ml" },
-        { name: "Cerveja", price: 8.90, description: "350ml" },
-        { name: "Milkshake", price: 12.90, description: "400ml" },
-        { name: "Refrigerante Zero", price: 6.90, description: "350ml" }
+        { name: "Roller 2L", price: 8.00, description: "2 litros" },
+        { name: "Coca-Cola 200ml", price: 3.00, description: "200ml" },
+        { name: "Frupic", price: 4.00, description: "Laranja e Frutas Vermelhas" }
     ]
 };
 
@@ -312,20 +341,45 @@ function displayMenuItems() {
 }
 
 function createMenuItem(item) {
+    const addOnsHtml = menuItems.sandwiches.some(sandwich => sandwich.name === item.name) && !item.noAddons
+        ? `<div class="add-ons">
+            ${addOns.map((addon, idx) => `
+                <label class="addon-option">
+                    <input type="checkbox" data-addon="${addon.name}" data-price="${addon.price}">
+                    ${addon.name} (+R$ ${addon.price.toFixed(2)})
+                </label>
+            `).join('')}
+           </div>`
+        : '';
+
     return `
         <div class="menu-item">
             <h3>${item.name}</h3>
             <p>${item.description}</p>
             <div class="price">R$ ${item.price.toFixed(2)}</div>
-            <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price})">
+            ${addOnsHtml}
+            <button class="add-to-cart" onclick="addToCart('${item.name}', ${item.price}, this)">
                 Adicionar ao Carrinho
             </button>
         </div>
     `;
 }
 
-function addToCart(name, price) {
-    cart.push({ name, price });
+function addToCart(name, price, buttonElement) {
+    const menuItem = buttonElement.closest('.menu-item');
+    const selectedAddons = Array.from(menuItem.querySelectorAll('.addon-option input:checked')).map(checkbox => ({
+        name: checkbox.dataset.addon,
+        price: parseFloat(checkbox.dataset.price)
+    }));
+    
+    cart.push({
+        name,
+        price,
+        addons: selectedAddons
+    });
+    
+    menuItem.querySelectorAll('.addon-option input').forEach(checkbox => checkbox.checked = false);
+    
     updateCart();
 }
 
@@ -336,11 +390,26 @@ function updateCart() {
 
     cartItems.innerHTML = '';
     cart.forEach((item, index) => {
-        total += item.price;
+        let itemTotal = item.price;
+        let addonsText = '';
+        
+        if (item.addons && item.addons.length > 0) {
+            addonsText = '<div class="cart-item-addons">';
+            item.addons.forEach(addon => {
+                itemTotal += addon.price;
+                addonsText += `<div>+ ${addon.name} (R$ ${addon.price.toFixed(2)})</div>`;
+            });
+            addonsText += '</div>';
+        }
+        
+        total += itemTotal;
         cartItems.innerHTML += `
             <div class="cart-item">
-                <span>${item.name}</span>
-                <span>R$ ${item.price.toFixed(2)}</span>
+                <div>
+                    <span>${item.name}</span>
+                    ${addonsText}
+                </div>
+                <span>R$ ${itemTotal.toFixed(2)}</span>
                 <button onclick="removeFromCart(${index})">X</button>
             </div>
         `;
@@ -348,7 +417,7 @@ function updateCart() {
 
     const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
     if (deliveryType === 'delivery') {
-        deliveryFee = 5;
+        deliveryFee = 5.00;
         cartItems.innerHTML += `
             <div class="cart-item">
                 <span>Taxa de Entrega</span>
@@ -356,6 +425,8 @@ function updateCart() {
             </div>
         `;
         total += deliveryFee;
+    } else {
+        deliveryFee = 0;
     }
 
     cartTotal.innerHTML = `Total: R$ ${total.toFixed(2)}`;
@@ -382,30 +453,41 @@ function checkout() {
     const name = document.getElementById('userName').value;
     const phone = document.getElementById('userPhone').value;
     const deliveryType = document.querySelector('input[name="deliveryType"]:checked').value;
-    const address = document.getElementById('userAddress').value;
+    const street = document.getElementById('userStreet').value;
+    const neighborhood = document.getElementById('userNeighborhood').value;
+    const number = document.getElementById('userNumber').value;
 
     if (!name || !phone) {
         alert('Por favor, preencha seu nome e telefone antes de finalizar o pedido.');
         return;
     }
 
-    if (deliveryType === 'delivery' && !address) {
-        alert('Por favor, preencha seu endereço para entrega.');
+    if (deliveryType === 'delivery' && (!street || !neighborhood || !number)) {
+        alert('Por favor, preencha todos os campos do endereço para entrega.');
         return;
     }
 
     let message = `Olá! Novo pedido:\n\nCliente: ${name}\nTelefone: ${phone}\n`;
     message += `Tipo: ${deliveryType === 'delivery' ? 'Entrega' : 'Retirada'}\n`;
     if (deliveryType === 'delivery') {
-        message += `Endereço: ${address}\n`;
+        message += `Endereço: ${street}, ${number} - ${neighborhood}\n`;
     }
     message += `\nPedido:\n`;
     
     let total = 0;
 
     cart.forEach(item => {
+        let itemTotal = item.price;
         message += `${item.name} - R$ ${item.price.toFixed(2)}\n`;
-        total += item.price;
+        
+        if (item.addons && item.addons.length > 0) {
+            item.addons.forEach(addon => {
+                message += `  + ${addon.name} - R$ ${addon.price.toFixed(2)}\n`;
+                itemTotal += addon.price;
+            });
+        }
+        
+        total += itemTotal;
     });
 
     if (deliveryType === 'delivery') {
